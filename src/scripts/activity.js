@@ -11,7 +11,7 @@ class Activity {
                     isDifferentUrl = true;
                 }
 
-                if (this.isNewUrl(domain) && !this.isInBlackList(domain)) {
+                if (this.isNewUrl(domain) && this.isInWhitelist(domain)) {
                     var favicon = tab.favIconUrl;
                     if (favicon === undefined) {
                         favicon = 'chrome://favicon/' + domain;
@@ -20,7 +20,7 @@ class Activity {
                     tabs.push(newTab);
                 }
 
-                if (isDifferentUrl && !this.isInBlackList(domain)) {
+                if (isDifferentUrl && this.isInWhitelist(domain)) {
                     this.setCurrentActiveTab(domain);
                     var tabUrl = this.getTab(domain);
                     if (tabUrl !== undefined)
@@ -43,6 +43,46 @@ class Activity {
         if (setting_black_list !== undefined && setting_black_list.length > 0)
             return setting_black_list.find(o => isDomainEquals(this.extractHostname(o), this.extractHostname(domain))) !== undefined;
         else return false;
+    }
+
+    isInWhitelist(domain) {
+        const whitelist = [
+            'anp.nl',
+            'barneveldsekrant.nl',
+            'rd.nl',
+            'fd.nl',
+            'bnr.nl',
+            'limburger.nl',
+            'frieschdagblad.nl',
+            'lc.nl',
+            'dvhn.nl',
+            'nd.nl',
+            'nrc.nl',
+            'ad.nl',
+            'parool.nl',
+            'trouw.nl',
+            'volkskrant.nl',
+            'bndestem.nl',
+            'bd.nl',
+            'ed.nl',
+            'gelderlander.nl',
+            'pzc.nl',
+            'destentor.nl',
+            'tubantia.nl',
+            'nu.nl',
+            'rtlnieuws.nl',
+            'telegraaf.nl',
+            'gooieneemlander.nl',
+            'haarlemsdagblad.nl',
+            'noordhollandsdagblad.nl',
+            'leidschdagblad.nl',
+            'ijmuidercourant.nl',
+            'vn.nl',
+            'groene.nl',
+            'decorrespondent.nl',
+            'nos.nl'];
+
+        return whitelist.find(o => isDomainEquals(this.extractHostname(o), this.extractHostname(domain))) !== undefined;
     }
 
     isLimitExceeded(domain, tab) {
@@ -85,6 +125,7 @@ class Activity {
 
         hostname = hostname.split(':')[0];
         hostname = hostname.split('?')[0];
+        // hostname = url;
 
         return hostname;
     }
@@ -136,7 +177,7 @@ class Activity {
         currentTab = '';
     }
 
-    isNeedNotifyView(domain, tab){
+    isNeedNotifyView(domain, tab) {
         if (setting_notification_list !== undefined && setting_notification_list.length > 0) {
             var item = setting_notification_list.find(o => isDomainEquals(this.extractHostname(o.domain), this.extractHostname(domain)));
             if (item !== undefined) {
