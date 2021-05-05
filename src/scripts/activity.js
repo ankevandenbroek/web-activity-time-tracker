@@ -99,6 +99,10 @@ class Activity {
       'groene.nl',
       'decorrespondent.nl',
       'nos.nl',
+      'twitter.com',
+      'instagram.com',
+      'facebook.com',
+      'linkedin.com'
     ];
 
     return whitelist.find((o) => isDomainEquals(o, hostname)) !== undefined;
